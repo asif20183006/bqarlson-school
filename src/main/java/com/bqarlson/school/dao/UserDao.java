@@ -16,6 +16,7 @@ public class UserDao {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     public UserDetails getUserByUserName(String userName) {
         try {
             String query = "select full_name,user_name,user_details_id,role_id,credential,contact_number,email_id," +
