@@ -6,6 +6,7 @@ import com.bqarlson.school.entities.UserDetails;
 import com.bqarlson.school.exceptions.ClientException;
 import com.bqarlson.school.exceptions.ServerException;
 import com.bqarlson.school.repostories.UserRepo;
+import com.bqarlson.school.utilities.CacheWrapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +23,8 @@ public class UserLoginBL {
     private RequestObject requestObject;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private CacheWrapper cacheWrapper;
 
     @Autowired
     private UserRepo userRepo;
@@ -53,7 +56,12 @@ public class UserLoginBL {
     public UserDetails serverValidation(LoginBean loginBean) throws ServerException {
         try {
 
-            UserDetails userDetails = userRepo.getUserByUserName(loginBean.getUserName());
+            UserDetails userDetails = cacheWrapper.getUserByUserName(loginBean.getUserName());
+
+            if (userDetails == null) {
+                log.error("User with user name: [{}] not found.", loginBean.getUserName());
+                throw new ServerException("Invalid user contact to administrator");
+            }
 
             if (userDetails.getStatus() == 0) {
                 log.error("User with user name: [{}], is inactive.", userDetails.getUserName());

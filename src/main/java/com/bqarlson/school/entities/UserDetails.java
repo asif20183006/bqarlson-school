@@ -1,10 +1,14 @@
 package com.bqarlson.school.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import lombok.NoArgsConstructor;
 
 @Data
-@Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserDetails {
     private String fullName;
     private String userName;
